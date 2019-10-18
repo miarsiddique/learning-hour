@@ -42,11 +42,11 @@ return [
         ],
 
         'api' => [
-            // 'driver' => 'token',
-            'driver' => 'passport',
+            'driver' => 'token',
+            // 'driver' => 'passport',
             'provider' => 'users',
-            'hash' => false,
-            // 'hash' => true,
+            // 'hash' => false,
+            'hash' => true,
         ],
     ],
 

@@ -27,7 +27,10 @@ class AuthServiceProvider extends ServiceProvider
         $this->registerPolicies();
 
         Passport::routes();
-
-        // Passport::loadKeysFrom('/secret-keys/oauth');
+         
+        /*\Auth::viaRequest('token', function ($request) {
+            $header = $request->header('Authorization');
+            return \App\User::where('api_token', $request->token)->first();
+        });*/
     }
 }

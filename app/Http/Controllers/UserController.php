@@ -5,6 +5,9 @@ use App\Http\Controllers\Controller;
 use App\User; 
 use Illuminate\Support\Facades\Auth; 
 use Validator;
+use Illuminate\Support\Str;
+
+
 class UserController extends Controller 
 {
 public $successStatus = 200;
@@ -20,6 +23,11 @@ public $successStatus = 200;
         } 
     }
 
+    /**
+     * Password Token for registration.
+     * @param  Request $request [description]
+     * @return [type]           [description]
+     */
     public function register(Request $request) 
     { 
         $validator = Validator::make($request->all(), [ 
@@ -40,9 +48,36 @@ public $successStatus = 200;
         return response()->json(['success'=>$success], $this->successStatus); 
     }
 
+    
     public function details() 
     { 
         $user = Auth::user(); 
         return response()->json(['success' => $user], $this->successStatus); 
     } 
+
+    /**
+     * API Authentication token..
+     * @return [type] [description]
+     */
+    public function user_register(Request $request) 
+    { 
+        $validator = Validator::make($request->all(), [ 
+            'name' => 'required', 
+            'email' => 'required|email', 
+            'password' => 'required', 
+            'c_password' => 'required|same:password', 
+        ]);
+
+        if ($validator->fails()) { 
+            return response()->json(['error'=>$validator->errors()], 401);            
+        }
+
+        $token = Str::random(60);
+        $input = $request->all(); 
+        $input['password'] = bcrypt($input['password']);
+        $input['api_token'] = hash('sha256', $token);
+        $user = User::create($input);         
+
+        return response()->json(['success'=>$user], $this->successStatus); 
+    }
 }

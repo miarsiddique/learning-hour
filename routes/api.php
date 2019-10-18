@@ -19,9 +19,17 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 
 Route::get('/todos', 'TodoController')->middleware('auth:api');
 
-Route::post('login', 'UserController@login');
+Route::post('login', 'UserController@login')->name('login');
 Route::post('register', 'UserController@register');
+Route::post('user-register', 'UserController@user_register');
+
 Route::group(['middleware' => 'auth:api'], function()
 {
    Route::get('details', 'UserController@details');
 });
+
+
+Route::group(['prefix' => 'common'], function() {
+	Route::get('db-value', 'CommonController@dbValue');
+	Route::get('users', 'CommonController@usersList');
+}) ;
